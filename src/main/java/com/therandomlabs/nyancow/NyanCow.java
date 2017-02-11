@@ -1,7 +1,5 @@
 package com.therandomlabs.nyancow;
 
-import java.util.UUID;
-import com.mojang.authlib.GameProfile;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.passive.EntityCow;
 import net.minecraft.entity.player.EntityPlayer;
@@ -11,18 +9,15 @@ import net.minecraft.util.EnumParticleTypes;
 import net.minecraft.util.Rotation;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.WorldServer;
-import net.minecraftforge.common.DimensionManager;
 import net.minecraftforge.common.MinecraftForge;
-import net.minecraftforge.common.util.FakePlayer;
 import net.minecraftforge.event.entity.living.LivingDeathEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.Mod.EventHandler;
-import net.minecraftforge.fml.common.SidedProxy;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.PlayerEvent.PlayerLoggedOutEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent.Phase;
-import net.minecraftforge.fml.common.gameevent.TickEvent.ServerTickEvent;
+import net.minecraftforge.fml.common.gameevent.TickEvent.WorldTickEvent;
 import net.minecraftforge.fml.relauncher.Side;
 
 @Mod(modid = NyanCow.MODID, version = NyanCow.VERSION,
@@ -32,29 +27,18 @@ public final class NyanCow {
 	public static final String VERSION = "1.11.2-1.0.0.0";
 	public static final String ACCEPTED_MINECRAFT_VERSIONS = "[1.10,1.12)";
 
-	@SidedProxy(clientSide = "com.therandomlabs.nyancow.ClientProxy",
-			serverSide = "com.therandomlabs.nyancow.CommonProxy")
-	public static CommonProxy proxy;
-
 	@EventHandler
 	public void init(FMLInitializationEvent event) {
-		//Hah, take that, Forge
-		if(!(proxy instanceof ClientProxy)) {
-			MinecraftForge.EVENT_BUS.register(this);
-		}
+		MinecraftForge.EVENT_BUS.register(this);
 	}
 
 	@SubscribeEvent
-	public void onServerTick(ServerTickEvent event) {
-		if(event.phase == Phase.END) {
-			//Get server by creating a fake player because for some reason there's no
-			//ServerTickEvent.getServer()
-			final WorldServer world = DimensionManager.getWorld(0);
-			final GameProfile profile = new GameProfile(UUID.randomUUID(), "FakePlayer");
-			final FakePlayer fakePlayer = new FakePlayer(world, profile);
-
-			for(Entity player : fakePlayer.getServer().getPlayerList().getPlayers()) {
-				updateNyanCow(fakePlayer.getServer(), player);
+	public void onWorldTick(WorldTickEvent event) {
+		if(event.phase == Phase.END && event.side == Side.SERVER) {
+			for(Entity entity : event.world.getEntities(Entity.class, entity -> true)) {
+				if(!entity.getEntityData().getBoolean("NyanCow")) {
+					updateNyanCow(event.world.getMinecraftServer(), entity);
+				}
 			}
 		}
 	}
@@ -66,7 +50,9 @@ public final class NyanCow {
 
 	@SubscribeEvent
 	public void onDeath(LivingDeathEvent event) {
-		if(event.getEntity() instanceof EntityPlayer) {
+		if(event.getEntity().getEntityData().getBoolean("NyanCow")) {
+			event.setCanceled(true);
+		} else {
 			removeNyanCow(event.getEntity().getServer(), event.getEntity());
 		}
 	}
@@ -92,10 +78,16 @@ public final class NyanCow {
 
 		final EntityCow cow = new EntityCow(world);
 		final BlockPos entityPosition = entity.getPosition();
-		cow.setPositionAndRotation(entityPosition.getX(), entityPosition.getY() + 3.5,
-				entityPosition.getZ(), entity.getRotatedYaw(Rotation.NONE), entity.rotationPitch);
+		cow.setPositionAndRotation(entityPosition.getX() + 1,
+				entityPosition.getY() + entity.getEyeHeight() + 1.88,
+				entityPosition.getZ() + 1,
+				entity.getRotatedYaw(Rotation.NONE),
+				entity.rotationPitch);
 		cow.setRotationYawHead(entity.getRotationYawHead());
+		cow.getEntityData().setBoolean("NyanCow", true);
+		cow.setEntityInvulnerable(true);
 		nbt.setUniqueId("NyanCowUUID", cow.getUniqueID());
+		world.spawnEntity(cow);
 
 		final BlockPos cowPosition = cow.getPosition();
 		final Direction direction = Direction.getDirectionFacing(cow, Rotation.CLOCKWISE_90);
