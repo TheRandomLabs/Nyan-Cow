@@ -1,7 +1,0 @@
-{
-	"nyan_cow_theme_song": {
-		"category": "neutral",
-		"subtitle": "nyancow.subtitle.nyanCowThemeSong",
-		"sounds": ["nyancow:nyan_cow_theme_song"]
-	}
-}

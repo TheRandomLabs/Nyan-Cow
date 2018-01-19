@@ -6,7 +6,7 @@
 		"version": "${version}",
 		"mcversion": "${mcversion}",
 		"url": "https://minecraft.curseforge.com/projects/nyan-cow",
-		"updateUrl": "https://raw.githubusercontent.com/TheRandomLabs/Nyan-Cow/master/versions.json",
+		"updateUrl": "https://raw.githubusercontent.com/TheRandomLabs/Nyan-Cow/misc/versions.json",
 		"authorList": ["TheRandomLabs"],
 		"credits": "",
 		"logoFile": "assets/nyancow/textures/logo.png",

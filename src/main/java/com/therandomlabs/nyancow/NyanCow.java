@@ -21,24 +21,19 @@ import net.minecraftforge.fml.common.gameevent.TickEvent.Phase;
 import net.minecraftforge.fml.common.gameevent.TickEvent.WorldTickEvent;
 import net.minecraftforge.fml.relauncher.Side;
 
-@EventBusSubscriber
 @Mod(modid = NyanCow.MODID, version = NyanCow.VERSION,
-		acceptedMinecraftVersions = NyanCow.ACCEPTED_MINECRAFT_VERSIONS, updateJSON =
-		"https://raw.githubusercontent.com/TheRandomLabs/Nyan-Cow/master/versions.json",
-		acceptableRemoteVersions = "*")
+		acceptedMinecraftVersions = NyanCow.ACCEPTED_MINECRAFT_VERSIONS,
+		acceptableRemoteVersions = NyanCow.ACCEPTABLE_REMOTE_VEERSIONS,
+		updateJSON = NyanCow.UPDATE_JSON,
+		certificateFingerprint = NyanCow.CERTIFICATE_FINGERPRINT)
 public final class NyanCow {
-	public static final String MODID = "nyancow";
-	public static final String VERSION = "1.11.2-1.1.0.0";
-	public static final String ACCEPTED_MINECRAFT_VERSIONS = "[1.10,1.12)";
-
-	public static final SoundEvent NYAN_COW_THEME_SONG =
-			new SoundEvent(new ResourceLocation(MODID, "nyan_cow_theme_song")).
-			setRegistryName("nyan_cow_theme_song");
-
-	@SubscribeEvent
-	public static void registerSoundEvents(RegistryEvent.Register<SoundEvent> event) {
-		event.getRegistry().register(NYAN_COW_THEME_SONG);
-	}
+	public static final String MODID = "randomtweaks";
+	public static final String VERSION = "@VERSION@";
+	public static final String ACCEPTED_MINECRAFT_VERSIONS = "[1.10,1.13)";
+	public static final String ACCEPTABLE_REMOTE_VEERSIONS = "*";
+	public static final String UPDATE_JSON =
+			"https://raw.githubusercontent.com/TheRandomLabs/Nyan-Cow/misc/versions.json";
+	public static final String CERTIFICATE_FINGERPRINT = "@FINGERPRINT@";
 
 	@SubscribeEvent
 	public static void onWorldTick(WorldTickEvent event) {
@@ -48,15 +43,6 @@ public final class NyanCow {
 					updateNyanCow(event.world.getMinecraftServer(), entity);
 				}
 			}
-		}
-	}
-
-	@SubscribeEvent
-	public static void onEntityJoin(EntityJoinWorldEvent event) {
-		if(event.getWorld().isRemote &&
-				!event.getEntity().getEntityData().getBoolean("NyanCow")) {
-			Minecraft.getMinecraft().getSoundHandler().playSound(
-					new NyanCowThemeSong(event.getEntity()));
 		}
 	}
 
