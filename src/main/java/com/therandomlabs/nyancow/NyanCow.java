@@ -23,14 +23,14 @@ import net.minecraftforge.fml.relauncher.Side;
 
 @Mod(modid = NyanCow.MODID, version = NyanCow.VERSION,
 		acceptedMinecraftVersions = NyanCow.ACCEPTED_MINECRAFT_VERSIONS,
-		acceptableRemoteVersions = NyanCow.ACCEPTABLE_REMOTE_VEERSIONS,
+		acceptableRemoteVersions = NyanCow.ACCEPTABLE_REMOTE_VERSIONS,
 		updateJSON = NyanCow.UPDATE_JSON,
 		certificateFingerprint = NyanCow.CERTIFICATE_FINGERPRINT)
 public final class NyanCow {
 	public static final String MODID = "randomtweaks";
 	public static final String VERSION = "@VERSION@";
 	public static final String ACCEPTED_MINECRAFT_VERSIONS = "[1.10,1.13)";
-	public static final String ACCEPTABLE_REMOTE_VEERSIONS = "*";
+	public static final String ACCEPTABLE_REMOTE_VERSIONS = "*";
 	public static final String UPDATE_JSON =
 			"https://raw.githubusercontent.com/TheRandomLabs/Nyan-Cow/misc/versions.json";
 	public static final String CERTIFICATE_FINGERPRINT = "@FINGERPRINT@";
