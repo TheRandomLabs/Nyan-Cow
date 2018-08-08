@@ -71,11 +71,13 @@ public final class NyanCow {
 		final EntityCow cow = new EntityCow(world);
 		final BlockPos entityPosition = entity.getPosition();
 		
-		cow.setPositionAndRotation(entityPosition.getX(),
+		cow.setPositionAndRotation(
+				entityPosition.getX(),
 				entityPosition.getY() + entity.getEyeHeight() + 1.88,
 				entityPosition.getZ() + 1,
 				entity.getRotatedYaw(Rotation.NONE),
-				entity.rotationPitch);
+				entity.rotationPitch
+		);
 		cow.setRotationYawHead(entity.getRotationYawHead());
 
 		cow.getEntityData().setBoolean("NyanCow", true);
