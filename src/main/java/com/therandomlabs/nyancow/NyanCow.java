@@ -22,14 +22,14 @@ import net.minecraftforge.fml.common.gameevent.TickEvent.WorldTickEvent;
 import net.minecraftforge.fml.relauncher.Side;
 
 @Mod(
-		modid = NyanCow.MODID, version = NyanCow.VERSION,
+		modid = NyanCow.MOD_ID, version = NyanCow.VERSION,
 		acceptedMinecraftVersions = NyanCow.ACCEPTED_MINECRAFT_VERSIONS,
 		acceptableRemoteVersions = NyanCow.ACCEPTABLE_REMOTE_VERSIONS,
 		updateJSON = NyanCow.UPDATE_JSON,
 		certificateFingerprint = NyanCow.CERTIFICATE_FINGERPRINT
 )
 public final class NyanCow {
-	public static final String MODID = "nyancow";
+	public static final String MOD_ID = "nyancow";
 	public static final String VERSION = "@VERSION@";
 	public static final String ACCEPTED_MINECRAFT_VERSIONS = "[1.10,1.13)";
 	public static final String ACCEPTABLE_REMOTE_VERSIONS = "*";
