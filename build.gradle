@@ -34,7 +34,7 @@ minecraft {
 }
 
 processResources {
-	//This will ensure that this task is redone when the versions change.
+	//Ensure this task is redone when the versions change
 	inputs.property "version", project.version
 	inputs.property "mcversion", project.minecraft.version
 
