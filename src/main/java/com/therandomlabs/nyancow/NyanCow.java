@@ -1,26 +1,20 @@
 package com.therandomlabs.nyancow;
 
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.multiplayer.WorldClient;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.passive.EntityCow;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.EnumParticleTypes;
-import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.Rotation;
-import net.minecraft.util.SoundEvent;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.WorldServer;
-import net.minecraftforge.event.RegistryEvent;
-import net.minecraftforge.event.entity.EntityJoinWorldEvent;
 import net.minecraftforge.fml.common.Mod;
-import net.minecraftforge.fml.common.Mod.EventBusSubscriber;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent.Phase;
 import net.minecraftforge.fml.common.gameevent.TickEvent.WorldTickEvent;
 import net.minecraftforge.fml.relauncher.Side;
 
+@Mod.EventBusSubscriber
 @Mod(
 		modid = NyanCow.MOD_ID, version = NyanCow.VERSION,
 		acceptedMinecraftVersions = NyanCow.ACCEPTED_MINECRAFT_VERSIONS,
@@ -76,7 +70,7 @@ public final class NyanCow {
 		cow.setPositionAndRotation(
 				entityPosition.getX(),
 				entityPosition.getY() + entity.getEyeHeight() + 1.88,
-				entityPosition.getZ() + 1,
+				entityPosition.getZ() + 1.0,
 				entity.getRotatedYaw(Rotation.NONE),
 				entity.rotationPitch
 		);
