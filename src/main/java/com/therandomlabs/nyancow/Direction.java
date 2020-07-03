@@ -22,14 +22,14 @@ public enum Direction {
 	}
 
 	public static Direction getDirectionFacing(Entity entity, Rotation rotation) {
-		double rot = (entity.getRotatedYaw(rotation) - 90) % 360;
+		double degrees = (entity.getRotatedYaw(rotation) - 90) % 360;
 
-		if(rot < 0) {
-			rot += 360.0;
+		if(degrees < 0) {
+			degrees += 360.0;
 		}
 
 		for(Direction direction : values()) {
-			if(rot >= direction.minRotation && rot < direction.maxRotation) {
+			if(degrees >= direction.minRotation && degrees < direction.maxRotation) {
 				return direction;
 			}
 		}

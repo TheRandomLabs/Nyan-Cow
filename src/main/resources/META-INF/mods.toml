@@ -1,0 +1,16 @@
+modLoader = "javafml"
+loaderVersion = "[16,)"
+updateJSONURL = "https://raw.githubusercontent.com/TheRandomLabs/Nyan-Cow/misc/versions.json"
+issueTrackerURL = "https://github.com/TheRandomLabs/Nyan-Cow/issues"
+displayURL = "https://www.curseforge.com/minecraft/mc-mods/nyan-cow"
+logoFile = "logo.png"
+authors = "TheRandomLabs"
+
+[[mods]]
+
+modId = "nyancow"
+version = "${file.jarVersion}"
+displayName = "Nyan Cow"
+description = '''
+Nyan Cow, the best mod ever written for Minecraft, no doubt.
+'''

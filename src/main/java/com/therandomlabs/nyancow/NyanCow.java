@@ -1,72 +1,59 @@
 package com.therandomlabs.nyancow;
 
 import net.minecraft.entity.Entity;
-import net.minecraft.entity.passive.EntityCow;
-import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.server.MinecraftServer;
-import net.minecraft.util.EnumParticleTypes;
+import net.minecraft.entity.EntityType;
+import net.minecraft.entity.passive.CowEntity;
+import net.minecraft.nbt.CompoundNBT;
+import net.minecraft.particles.IParticleData;
+import net.minecraft.particles.RedstoneParticleData;
 import net.minecraft.util.Rotation;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.WorldServer;
+import net.minecraft.util.math.vector.Vector3d;
+import net.minecraft.world.server.ServerWorld;
+import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.event.TickEvent;
+import net.minecraftforge.fml.LogicalSide;
 import net.minecraftforge.fml.common.Mod;
-import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
-import net.minecraftforge.fml.common.gameevent.TickEvent.Phase;
-import net.minecraftforge.fml.common.gameevent.TickEvent.WorldTickEvent;
-import net.minecraftforge.fml.relauncher.Side;
 
-@Mod.EventBusSubscriber
-@Mod(
-		modid = NyanCow.MOD_ID, version = NyanCow.VERSION,
-		acceptedMinecraftVersions = NyanCow.ACCEPTED_MINECRAFT_VERSIONS,
-		acceptableRemoteVersions = NyanCow.ACCEPTABLE_REMOTE_VERSIONS,
-		updateJSON = NyanCow.UPDATE_JSON,
-		certificateFingerprint = NyanCow.CERTIFICATE_FINGERPRINT
-)
+@Mod(NyanCow.MOD_ID)
 public final class NyanCow {
 	public static final String MOD_ID = "nyancow";
-	public static final String VERSION = "@VERSION@";
-	public static final String ACCEPTED_MINECRAFT_VERSIONS = "[1.10,1.13)";
-	public static final String ACCEPTABLE_REMOTE_VERSIONS = "*";
-	public static final String UPDATE_JSON =
-			"https://raw.githubusercontent.com/TheRandomLabs/Nyan-Cow/misc/versions.json";
-	public static final String CERTIFICATE_FINGERPRINT = "@FINGERPRINT@";
 
-	@SubscribeEvent
-	public static void onWorldTick(WorldTickEvent event) {
-		if(event.phase == Phase.END && event.side == Side.SERVER) {
-			for(Entity entity : event.world.getEntities(Entity.class, entity -> true)) {
-				if(!entity.getEntityData().getBoolean("NyanCow")) {
-					updateNyanCow(event.world.getMinecraftServer(), entity);
-				}
-			}
+	private static final IParticleData[] particles = {
+			new RedstoneParticleData(1.0F, 0.0F, 0.0F, 1.0F),
+			new RedstoneParticleData(0.0F, 1.0F, 0.0F, 1.0F),
+			new RedstoneParticleData(0.0F, 0.0F, 1.0F, 1.0F),
+			new RedstoneParticleData(1.0F, 1.0F, 0.5F, 1.0F),
+			new RedstoneParticleData(0.0F, 1.0F, 1.0F, 1.0F),
+			new RedstoneParticleData(1.0F, 1.0F, 1.0F, 1.0F),
+			new RedstoneParticleData(0.5F, 0.5F, 0.5F, 1.0F),
+			new RedstoneParticleData(0.5F, 0.5F, 1.0F, 1.0F),
+			new RedstoneParticleData(1.0F, 0.5F, 1.0F, 1.0F)
+	};
+
+	public NyanCow() {
+		MinecraftForge.EVENT_BUS.addListener(this::onWorldTick);
+	}
+
+	public void onWorldTick(TickEvent.WorldTickEvent event) {
+		if (event.phase == TickEvent.Phase.END && event.side == LogicalSide.SERVER) {
+			final ServerWorld world = (ServerWorld) event.world;
+			world.getEntities(null, entity -> !entity.getPersistentData().getBoolean("NyanCow")).
+					forEach(entity -> updateNyanCow(world, entity));
 		}
 	}
 
-	public static void removeNyanCow(MinecraftServer server, Entity entity) {
-		final NBTTagCompound nbt = entity.getEntityData();
+	public static void updateNyanCow(ServerWorld world, Entity entity) {
+		removeNyanCow(world, entity);
 
-		if(nbt.hasUniqueId("NyanCowUUID")) {
-			final Entity cow = server.getEntityFromUuid(nbt.getUniqueId("NyanCowUUID"));
-
-			if(cow != null) {
-				cow.getEntityWorld().removeEntity(cow);
-			}
-		}
-	}
-
-	public static void updateNyanCow(MinecraftServer server, Entity entity) {
-		removeNyanCow(server, entity);
-		
-		if(entity.isDead) {
+		if (!entity.isAlive()) {
 			return;
 		}
 
-		final NBTTagCompound nbt = entity.getEntityData();
-		final WorldServer world = (WorldServer) entity.getEntityWorld();
+		final CompoundNBT data = entity.getPersistentData();
 
-		final EntityCow cow = new EntityCow(world);
-		final BlockPos entityPosition = entity.getPosition();
-		
+		final CowEntity cow = new CowEntity(EntityType.COW, world);
+		final Vector3d entityPosition = entity.getPositionVec();
+
 		cow.setPositionAndRotation(
 				entityPosition.getX(),
 				entityPosition.getY() + entity.getEyeHeight() + 1.88,
@@ -76,20 +63,17 @@ public final class NyanCow {
 		);
 		cow.setRotationYawHead(entity.getRotationYawHead());
 
-		cow.getEntityData().setBoolean("NyanCow", true);
-		cow.setEntityInvulnerable(true);
-		nbt.setUniqueId("NyanCowUUID", cow.getUniqueID());
+		cow.getPersistentData().putBoolean("NyanCow", true);
+		cow.setInvulnerable(true);
+		data.putUniqueId("NyanCowUUID", cow.getUniqueID());
 
-		world.spawnEntity(cow);
+		world.addEntity(cow);
 
-		final BlockPos cowPosition = cow.getPosition();
+		final Vector3d cowPosition = cow.getPositionVec();
 		final Direction direction = Direction.getDirectionFacing(cow, Rotation.CLOCKWISE_90);
 
 		world.spawnParticle(
-				//Wool
-				EnumParticleTypes.REDSTONE,
-				//No long distances
-				false,
+				particles[(int) world.getGameTime() % particles.length],
 				cowPosition.getX() + direction.getXDirection() * 12,
 				cowPosition.getY(),
 				cowPosition.getZ() + direction.getZDirection() * 12,
@@ -101,5 +85,17 @@ public final class NyanCow {
 				//Speed
 				10.0
 		);
+	}
+
+	public static void removeNyanCow(ServerWorld world, Entity entity) {
+		final CompoundNBT data = entity.getPersistentData();
+
+		if (data.hasUniqueId("NyanCowUUID")) {
+			final Entity cow = world.getEntityByUuid(data.getUniqueId("NyanCowUUID"));
+
+			if (cow != null) {
+				world.removeEntity(cow);
+			}
+		}
 	}
 }
