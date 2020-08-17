@@ -21,7 +21,7 @@ targetCompatibility = JavaVersion.VERSION_1_8
 compileJava.sourceCompatibility = JavaVersion.VERSION_1_8
 compileJava.targetCompatibility = JavaVersion.VERSION_1_8
 
-version = "1.16.1-1.0.0.2"
+version = "1.16.2-1.0.0.3"
 group = "com.therandomlabs.nyancow"
 archivesBaseName = "nyancow"
 
@@ -57,7 +57,7 @@ minecraft {
 	}
 }
 dependencies {
-	minecraft "net.minecraftforge:forge:1.16.1-32.0.40"
+	minecraft "net.minecraftforge:forge:1.16.2-33.0.5"
 }
 
 jar {
