@@ -1,5 +1,8 @@
 {
 	"homepage": "https://minecraft.curseforge.com/projects/nyan-cow",
+	"1.16.3": {
+		"1.16.2-1.0.0.3": "Added a license to mods.toml."
+	},
 	"1.16.2": {
 		"1.16.2-1.0.0.3": "Added a license to mods.toml."
 	},
@@ -43,6 +46,8 @@
 		"1.12.2-1.0.0.0": "Initial release."
 	},
 	"promos": {
+		"1.16.3-latest": "1.16.2-1.0.0.3",
+		"1.16.3-recommended": "1.16.2-1.0.0.3",
 		"1.16.2-latest": "1.16.2-1.0.0.3",
 		"1.16.2-recommended": "1.16.2-1.0.0.3",
 		"1.16.1-latest": "1.16.2-1.0.0.3",
